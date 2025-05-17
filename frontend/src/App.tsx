@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Blog from "./pages/Blog.tsx";
 import Signup from "./pages/Signup.tsx";
 import Signin from "./pages/Signin.tsx";
-
+import Blogs from "./pages/Blogs.tsx";
 
 function App() {
 
@@ -16,6 +16,7 @@ function App() {
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/signin" element={<Signin />} />
                   <Route path="/blog/:id" element={<Blog />} />
+                  <Route path='/blogs' element={<Blogs />} />
               </Routes>
           </BrowserRouter>
       </>

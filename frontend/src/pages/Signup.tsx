@@ -6,7 +6,7 @@ function Signup(){
 
         <div className="grid grid-cols-2 ">
             <div className="col-span-2 md:col-span-1">
-            <Auth/>
+            <Auth type={"signup"}/>
             </div>
             <div className="hidden md:block">
             <Quote/>

@@ -2,3 +2,4 @@
 /common/node_modules
 /backend/.env
 /backend/wrangler.jsonc
+/frontend/node_modules
