@@ -2,7 +2,7 @@ import {PrismaClient} from "@prisma/client/edge";
 import {withAccelerate} from "@prisma/extension-accelerate";
 import {sign, verify} from 'hono/jwt'
 import { Hono } from 'hono';
-import {signupInput, siginInput, SignupInput} from "@invisibleana/medium-common";
+import {signupInput, siginInput, SignupInput} from "../common/src/index.ts"
 
 export const userRouter = new Hono<{
     Bindings :{
