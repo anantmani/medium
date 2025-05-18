@@ -37,8 +37,23 @@ blogRouter.get('/bulk', async (c) => {
         datasourceUrl: c.env?.DATABASE_URL	,
     }).$extends(withAccelerate());
 
-    const content = await prisma.post.findMany({})
-    return c.json({id:content})
+    const content = await prisma.post.findMany({
+        select: {
+            id:true,
+            title: true,
+            content: true,
+            published: true,
+            author:{
+                select:{
+                id:true,
+                name: true,}
+
+            }
+        }
+        }
+    )
+
+    return c.json({content})
 })
 
 
@@ -52,13 +67,23 @@ blogRouter.get('/:id', async (c) => {
     const blog = await prisma.post.findFirst({
         where: {
             id: id
+        },
+        select: {
+            id:true,
+            title: true,
+            content: true,
+            published: true,
+            author:{
+                select:{
+                    id:true,
+                    name: true,}
+
+            }
         }
-
     })
 
-    return c.json({
-        id:blog
-    })
+    return c.json(
+        blog)
 })
 
 blogRouter.post('/', async (c) => {
@@ -66,11 +91,22 @@ blogRouter.post('/', async (c) => {
         datasourceUrl: c.env?.DATABASE_URL	,
     }).$extends(withAccelerate());
 
-    const body =await c.req.json()
+    interface ReqType {
+        title  :   string
+        content : string
+
+    }
+    const formatter = new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    const formattedDate = formatter.format(new Date()).replace(" ", ", ");
+    console.log(formattedDate);
+
+
+    const body:ReqType =await c.req.json()
     const blog = await prisma.post.create({
         data: {
             title:body.title,
             content: body.content,
+            published: formattedDate ,
             authorId: c.get("UserId")
         }
     })

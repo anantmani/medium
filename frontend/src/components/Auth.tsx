@@ -1,5 +1,4 @@
 import {Link} from "react-router-dom";
-import type {SigninInput} from "@invisibleana/medium-common";
 import {useState} from "react";
 import {BACKEND_URL} from "../../config.ts";
 import axios from "axios";
@@ -8,15 +7,24 @@ import {useNavigate} from "react-router-dom";
 
 function Auth({type}: {type: "signin"|"signup"}) {
     const navigate = useNavigate()
+    interface SigninInput {
+        email: string;
+        password: string;
+        name?: string;
+    }
     const [postInputs,setPostInputs] = useState<SigninInput>({
         name: "",
         password: "",
-        username: ""
+        email: ""
     });
 
     async function sendRequest() {
-        const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type === 'signin'?'signin':'signup'}`, postInputs)
+        console.log(`${BACKEND_URL}/api/v1/user/${type === 'signin'?'signin':'signup'}`)
+        console.log(postInputs)
+        const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type === 'signin'?'signin':'signup'}`, postInputs,{headers:{"content-type": "application/json"}});
+        console.log(response)
         const jwt = response.data;
+        console.log(jwt);
         localStorage.setItem("token", jwt);
         navigate("/blogs")
 
@@ -37,11 +45,11 @@ function Auth({type}: {type: "signin"|"signup"}) {
                     </div>
                     </div>
                     <div>
-                        {type === "signup" ? <LablelledInput lable="Name" placeholder="Anant..."
+                        {type === "signup" ? <LablelledInput label="Name" placeholder="Anant..."
                                         onChange={(e) => setPostInputs({...postInputs, name: e.target.value})}/> : null}
-                        <LablelledInput lable="email" placeholder="anant@xyz.com"
-                                        onChange={(e) => setPostInputs({...postInputs, username: e.target.value})}/>
-                        <LablelledInput lable="password" placeholder="12324" type="password"
+                        <LablelledInput label="email" placeholder="anant@xyz.com"
+                                        onChange={(e) => setPostInputs({...postInputs, email: e.target.value})}/>
+                        <LablelledInput label="password" placeholder="12324" type="password"
                                         onChange={(e) => setPostInputs({...postInputs, password: e.target.value})}/>
                     </div>
                     <button type="button"
@@ -58,16 +66,16 @@ function Auth({type}: {type: "signin"|"signup"}) {
     )
 }
 
-interface LablelledInputType {
-    lable: string;
+interface LablleledInputType {
+    label: string;
     placeholder: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     type?: string;
 }
 
-function LablelledInput({lable, placeholder, onChange, type}: LablelledInputType) {
+function LablelledInput({label, placeholder, onChange, type}: LablleledInputType) {
     return (<div className="mb-3">
-        <label className="block mb-1 text-sm font-medium text-gray-900">{lable}</label>
+        <label className="block mb-1 text-sm font-medium text-gray-900">{label}</label>
     <input type={type||"text"} id="first_name"
            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
            placeholder={placeholder} onChange={onChange} />

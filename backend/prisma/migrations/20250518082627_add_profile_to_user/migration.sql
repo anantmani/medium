@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Post" ALTER COLUMN "published" SET DEFAULT '23 Dec,2024',
+ALTER COLUMN "published" SET DATA TYPE TEXT;

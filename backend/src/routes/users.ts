@@ -2,7 +2,7 @@ import {PrismaClient} from "@prisma/client/edge";
 import {withAccelerate} from "@prisma/extension-accelerate";
 import {sign, verify} from 'hono/jwt'
 import { Hono } from 'hono';
-import {signupInput, siginInput, SignupInput} from "../common/src/index.ts"
+import {signupInput, siginInput, SignupInput} from "@invisibleana/medium-common";
 
 export const userRouter = new Hono<{
     Bindings :{
@@ -15,16 +15,11 @@ userRouter.post('/signup', async (c) => {
         datasourceUrl: c.env?.DATABASE_URL	,
     }).$extends(withAccelerate());
 
-    const body:SignupInput = await c.req.json();
+    console.log(c.req)
+    const body= await c.req.json();
     console.log(body);
-    const {success,error} = signupInput.safeParse(body);
-    if(!success) {
-        c.status(411)
-        console.log(error.format())
-        console.log(success)
-        return c.text("invalidinput"
-        )
-    }
+
+
     try {
         const user = await prisma.user.create({
             data: {
@@ -57,9 +52,10 @@ userRouter.post('/signin', async (c) => {
     });
     if(!user) {
         c.status(403);
+
         return c.json({ error: "user not found" });
     }
     const jwt = await sign({ id: user.id }, "someSecret");
-    return c.json({ jwt });
+    return c.json(jwt);
 
 })
